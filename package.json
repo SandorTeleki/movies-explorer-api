@@ -1,0 +1,30 @@
+{
+  "name": "movies-explorer-api",
+  "version": "1.0.0",
+  "description": "Testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SandorTeleki/movies-explorer-api.git"
+  },
+  "author": "Sandor Teleki",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SandorTeleki/movies-explorer-api/issues"
+  },
+  "homepage": "https://github.com/SandorTeleki/movies-explorer-api#readme",
+  "dependencies": {
+    "express": "^4.17.3",
+    "celebrate": "^15.0.1",
+    "mongoose": "^6.2.4",
+    "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.13.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "nodemon": "^2.0.15"
+  }
+}
