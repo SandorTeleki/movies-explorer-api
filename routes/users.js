@@ -1,7 +1,20 @@
-const userRouter = require('express').Router();
-const { getUserInfo, updateUser } = require('../controllers/users');
+const { Router } = require('express');
+const { celebrate } = require('celebrate');
+const { createUser, updateUserProfile, getCurrentUser } = require('../controllers/users');
+const { login, logout } = require('../controllers/login');
+const {
+  signupValidationSchema,
+  signinValidationSchema,
+  updateProfileValidationSchema,
+} = require('../middlewares/schemaValidator');
+const auth = require('../middlewares/auth');
 
-userRouter.get('/me', getUserInfo);
-userRouter.patch('/me', updateUser);
+const router = Router();
 
-module.exports = userRouter;
+router.post('/signup', celebrate(signupValidationSchema), createUser);
+router.post('/signin', celebrate(signinValidationSchema), login);
+router.post('/signout', auth, logout);
+router.get('/users/me', auth, getCurrentUser);
+router.patch('/users/me', auth, celebrate(updateProfileValidationSchema), updateUserProfile);
+
+module.exports = router;

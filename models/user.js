@@ -1,19 +1,19 @@
-const { Schema, model } = require('mongoose');
-const { isEmail } = require('validator');
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const UnauthorizedError = require('../errors/UnauthorizedError');
+const { ERR_BAD_REQUEST_MSG_INCORRECT_LOGIN } = require('../utils/constants');
 
-const userSchema = new Schema({
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
+    minLength: 2,
+    maxLength: 30,
     required: true,
-    minlength: 2,
-    maxlength: 30,
   },
   email: {
     type: String,
-    unique: true,
     required: true,
-    validator: isEmail,
-    message: 'Невалидный email',
+    unique: true,
   },
   password: {
     type: String,
@@ -22,4 +22,20 @@ const userSchema = new Schema({
   },
 });
 
-module.exports = model('user', userSchema);
+userSchema.statics.findUserByCredentials = function findUserByCredentials(email, password) {
+  return this.findOne({ email }).select('+password')
+    .then((user) => {
+      if (!user) {
+        throw new UnauthorizedError(ERR_BAD_REQUEST_MSG_INCORRECT_LOGIN);
+      }
+      return bcrypt.compare(password, user.password)
+        .then((matched) => {
+          if (!matched) {
+            throw new UnauthorizedError(ERR_BAD_REQUEST_MSG_INCORRECT_LOGIN);
+          }
+          return user;
+        });
+    });
+};
+
+module.exports = mongoose.model('user', userSchema);

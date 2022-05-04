@@ -1,3 +1,5 @@
 # movies-explorer-api
 
-Testing
+Бекэнд дипломной работы
+
+Ссылка: api.moviesexplorer.teleki.nomoredomains.xyz
