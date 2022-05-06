@@ -1,0 +1,93 @@
+const bcrypt = require('bcryptjs');
+const User = require('../models/user');
+const ConflictError = require('../errors/ConflictError');
+const NotFoundError = require('../errors/NotFoundError');
+const BadRequestError = require('../errors/BadRequestError');
+const {
+  ERR_CONFLICT_MSG_SAME_USER,
+  ERR_NOT_FOUND_MSG_USER,
+  MSG_USER_UPDATED,
+  ERR_BAD_REQUEST_MSG_INCORRECT_DATA,
+  ERR_CONFLICT_MSG_SAME_EMAIL,
+} = require('../utils/constants');
+
+const createUser = (req, res, next) => {
+  const {
+    name,
+    email,
+    password,
+  } = req.body;
+  User.findOne({ email })
+    .then((user) => {
+      if (user) {
+        throw new ConflictError(ERR_CONFLICT_MSG_SAME_USER);
+      } else {
+        return bcrypt.hash(password, 10);
+      }
+    })
+    .then((hash) => User.create({
+      name,
+      email,
+      password: hash,
+    }))
+    .then(() => {
+      res.status(201).send({
+        user: {
+          name, email,
+        },
+      });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+const updateUserProfile = (req, res, next) => {
+  const {
+    name,
+    email,
+  } = req.body;
+  const id = req.user._id;
+  User.findByIdAndUpdate(id, {
+    name,
+    email,
+  }, {
+    new: true,
+  })
+    .orFail(() => next(new NotFoundError(ERR_NOT_FOUND_MSG_USER)))
+    .then((user) => {
+      res.send({
+        message: MSG_USER_UPDATED,
+        name: user.name,
+        email: user.email,
+      });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return next(new BadRequestError(ERR_BAD_REQUEST_MSG_INCORRECT_DATA));
+      }
+      if (err.name === 'MongoServerError') {
+        return next(new ConflictError(ERR_CONFLICT_MSG_SAME_EMAIL));
+      }
+      next(err);
+    });
+};
+
+const getCurrentUser = (req, res, next) => {
+  const id = req.user._id;
+  User.findById(id)
+    .orFail(() => next(new NotFoundError(ERR_NOT_FOUND_MSG_USER)))
+    .then((user) => {
+      res.send({
+        name: user.name,
+        email: user.email,
+      });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return next(new BadRequestError(ERR_BAD_REQUEST_MSG_INCORRECT_DATA));
+      }
+      next(err);
+    });
+};
+module.exports = { createUser, updateUserProfile, getCurrentUser };
