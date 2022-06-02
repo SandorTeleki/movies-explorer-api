@@ -1,5 +1,13 @@
 const { Joi } = require('celebrate');
+const validator = require('validator');
 const { joiErrorMessages } = require('../utils/constants');
+
+function checkURL(value, helpers) {
+  if (validator.isURL(value)) {
+    return value;
+  }
+  return helpers.message('Поле не соответствует формату ссылки.');
+}
 
 const signupValidationSchema = {
   body: Joi.object().keys({
@@ -27,7 +35,7 @@ const updateProfileValidationSchema = {
     name: Joi.string().required().min(2).max(30)
       .label('Имя пользователя')
       .messages(joiErrorMessages),
-    email: Joi.string().email().label('Email').required()
+    email: Joi.string().pattern(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/).label('Email').required()
       .messages(joiErrorMessages),
   }),
 };
@@ -44,11 +52,11 @@ const createMovieValidationSchema = {
       .messages(joiErrorMessages),
     description: Joi.string().required().label('Описание')
       .messages(joiErrorMessages),
-    image: Joi.string().required().uri({ allowRelative: true }).label('Ссылка на изображение.')
+    image: Joi.string().required().custom(checkURL).label('Ссылка на изображение.')
       .messages(joiErrorMessages),
-    trailerLink: Joi.string().required().uri().label('Ссылка на трейлер')
+    trailerLink: Joi.string().required().custom(checkURL).label('Ссылка на трейлер')
       .messages(joiErrorMessages),
-    thumbnail: Joi.string().required().uri({ allowRelative: true }).label('Ссылка на иконку')
+    thumbnail: Joi.string().required().custom(checkURL).label('Ссылка на иконку')
       .messages(joiErrorMessages),
     movieId: Joi.number().integer().required().label('Id фильма')
       .messages(joiErrorMessages),

@@ -2,4 +2,6 @@
 
 Бекэнд дипломной работы
 
-Ссылка: api.moviesexplorer.teleki.nomoredomains.xyz
+Дипломный проект курса веб-разработки Яндекс.Практикум: приложение по поиску фильмов BeatFilm-Movies.
+
+[Ссылка на сервер](api.moviesexplorer.teleki.nomoredomains.xyz)

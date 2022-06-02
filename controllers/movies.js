@@ -8,9 +8,6 @@ const {
   ERR_CONFLICT_MSG_SAME_MOVIE,
   ERR_NOT_FOUND_MSG_MOVIE,
   ERR_FORBIDDEN_MSG_MOVIE,
-  ERR_NOT_FOUND_MSG_MOVIES,
-  MSG_MOVIE_SAVED,
-  MSG_MOVIE_DELETED,
   ERR_BAD_REQUEST_MSG_INCORRECT_DATA,
 } = require('../utils/constants');
 
@@ -49,8 +46,8 @@ const createMovie = (req, res, next) => {
         owner,
       });
     })
-    .then(() => {
-      res.status(201).send({ message: MSG_MOVIE_SAVED });
+    .then((movie) => {
+      res.status(201).send(movie);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -73,7 +70,7 @@ const deleteMovie = (req, res, next) => {
       }
       return movie.remove()
         .then(() => {
-          res.send({ message: MSG_MOVIE_DELETED });
+          res.send(movie);
         });
     })
     .catch((err) => {
@@ -88,9 +85,6 @@ const getSavedMovies = (req, res, next) => {
   const owner = req.user._id;
   Movie.find({ owner })
     .then((movies) => {
-      if (movies.length === 0) {
-        return next(new NotFoundError(ERR_NOT_FOUND_MSG_MOVIES));
-      }
       res.send(movies);
     })
     .catch((err) => {
