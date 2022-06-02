@@ -11,7 +11,7 @@ const ERR_NOT_FOUND_MSG_MOVIE = 'С таким id не найден фильм.'
 const ERR_NOT_FOUND_MSG_USER = 'Невозможно отобразить информацию о пользователе, возможно, нужна авторизация.';
 const ERR_NOT_FOUND_MSG_MOVIES = 'Нет сохраненных фильмов.';
 const ERR_CONFLICT_MSG_SAME_USER = 'Такой пользователь уже существует.';
-const ERR_CONFLICT_MSG_SAME_MOVIE = 'Такой фильм уже существует.';
+const ERR_CONFLICT_MSG_SAME_MOVIE = 'Такой фильм уже в списке сохраненных фильмов.';
 const ERR_CONFLICT_MSG_SAME_EMAIL = 'Пользователь с таким email уже существует.';
 const ERR_BAD_REQUEST_MSG_INCORRECT_DATA = 'Переданы некорректные данные.';
 const ERR_BAD_REQUEST_MSG_INCORRECT_LOGIN = 'Неправильная почта или пароль.';
@@ -31,9 +31,9 @@ const joiErrorMessages = {
   'string.min': '{#label} должно быть строкой минимум из {#limit} символов.',
   'string.max': '{#label} должно быть строкой максимум из {#limit} символов.',
   'number.base': 'Поле {#label} должно быть числом.',
-  'string.uri': 'Поле {#label} не ссылка.',
   'string.length': 'Некорректный формат {#label}. Должна быть строка из {#limit} символов.',
   'string.hex': 'Некорректный формат {#label}. Должна быть строка из 24 символов.',
+  'string.pattern.base': 'Некорректный формат {#label}. Должно быть в формате pochta@yandex.ru',
 };
 
 module.exports = {
