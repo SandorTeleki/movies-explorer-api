@@ -1,5 +1,5 @@
-const movieRouter = require('./movies');
 const userRouter = require('./users');
+const movieRouter = require('./movies');
 const auth = require('../middlewares/auth');
 const NotFoundError = require('../errors/NotFoundError');
 const { ERR_NOT_FOUND_MSG_ROUTE } = require('../utils/constants');
