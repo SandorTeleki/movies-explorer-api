@@ -4,11 +4,11 @@ const ConflictError = require('../errors/ConflictError');
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 const {
-  ERR_CONFLICT_MSG_SAME_USER,
+  ERR_CONFLICT_MSG_SAMEUSER,
   ERR_NOT_FOUND_MSG_USER,
   MSG_USER_UPDATED,
   ERR_BAD_REQUEST_MSG_INCORRECT_DATA,
-  ERR_CONFLICT_MSG_SAME_EMAIL,
+  ERR_CONFLICT_MSG_SAMEEMAIL,
 } = require('../utils/constants');
 
 const createUser = (req, res, next) => {
@@ -32,7 +32,7 @@ const createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.code === 11000) {
-        return next(new ConflictError(ERR_CONFLICT_MSG_SAME_USER));
+        return next(new ConflictError(ERR_CONFLICT_MSG_SAMEUSER));
       }
       next(err);
     });
@@ -63,7 +63,7 @@ const updateUserProfile = (req, res, next) => {
         return next(new BadRequestError(ERR_BAD_REQUEST_MSG_INCORRECT_DATA));
       }
       if (err.name === 'MongoServerError') {
-        return next(new ConflictError(ERR_CONFLICT_MSG_SAME_EMAIL));
+        return next(new ConflictError(ERR_CONFLICT_MSG_SAMEEMAIL));
       }
       next(err);
     });

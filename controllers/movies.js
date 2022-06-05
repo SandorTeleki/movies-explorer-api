@@ -1,35 +1,23 @@
 const Movie = require('../models/movie');
-const BadRequestError = require('../errors/BadRequestError');
-const ForbiddenError = require('../errors/ForbiddenError');
-const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
-
+const NotFoundError = require('../errors/NotFoundError');
+const ForbiddenError = require('../errors/ForbiddenError');
 const {
-  ERR_CONFLICT_MSG_SAME_MOVIE,
-  ERR_NOT_FOUND_MSG_MOVIE,
-  ERR_FORBIDDEN_MSG_MOVIE,
+  ERR_CONFLICT_MSG_SAMEMOVIE, ERR_NOT_FOUND_MSG_MOVIE, ERR_FORBIDDEN_MSG_MOVIE,
   ERR_BAD_REQUEST_MSG_INCORRECT_DATA,
 } = require('../utils/constants');
+const BadRequestError = require('../errors/BadRequestError');
 
 const createMovie = (req, res, next) => {
   const {
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    nameRU,
-    nameEN,
-    thumbnail,
-    movieId,
+    country, director, duration, year, description, image, trailerLink, nameRU,
+    nameEN, thumbnail, movieId,
   } = req.body;
   const owner = req.user._id;
   Movie.findOne({ owner, movieId })
     .then((movie) => {
       if (movie) {
-        return next(new ConflictError(ERR_CONFLICT_MSG_SAME_MOVIE));
+        return next(new ConflictError(ERR_CONFLICT_MSG_SAMEMOVIE));
       }
       return Movie.create({
         country,
